@@ -11,6 +11,8 @@ import math
 
 from obstacle import MapGenerator
 from constant import  CONSTANTS
+from agent import Agent
+from target import  Target
 
 CONST= CONSTANTS()
 mapGen = MapGenerator()
@@ -21,12 +23,12 @@ class Env:
 
         #make the map
         self.map= mapGen.generate_map(CONST.HEIGHT, CONST.WIDTH)
-
         self.validMap = np.zeros_like(self.map)
         self.height = self.map.shape[0]
         self.width = self.map.shape[1]
-        self.agentList= None
-        self.targetList = None
+        self.agentList= []
+        self.targetList = []
+
 
 
 
@@ -48,6 +50,7 @@ class Env:
         self.agentList= np.array([]).astype(int)
         self.targetList= np.array([]).astype(int)
         self.map= mapGen.generate_map(CONST.HEIGHT, CONST.WIDTH)
+        self.validMap = np.zeros_like(self.map)
         self.rand_target_pos()
         self.rand_agents_pos()
 
@@ -57,14 +60,26 @@ class Env:
 
         pos= self.random_pos(num_agents)
 
-        self.agentList = np.append(self.agentList, pos)
+
+        for i in range(num_agents):
+            x= int (2 * i)
+            y= int (2 * i + 2)
+
+            a_pos= pos[x : y]
+            agent= Agent(i + 1, a_pos)
+            self.agentList = np.append(self.agentList, agent)
 
         self.update_map()
 
     def rand_target_pos(self, num_target = 4):
         pos = self.random_pos(num_target)
 
-        self.targetList= np.append(self.targetList, pos)
+        for i in range(num_target):
+            x = int(2 * i)
+            y = int(2 * i + 2)
+            t_pos = pos[x: y]
+            target = Target(t_pos)
+            self.targetList = np.append(self.targetList, target)
 
         self.update_map()
 
@@ -73,27 +88,26 @@ class Env:
         # agent are marked with negative numbers from -1...-n
         #in valid map: agent (-1)
         if len(self.agentList) != 0:
-            agent_pos= self.agentList.reshape(-1, 2)
-            a_index= -1
-            for a_p in agent_pos:
-                a_x= a_p[0]
-                a_y= a_p[1]
-
-                self.map[a_x, a_y]= a_index
+            for agent in self.agentList:
+                a_x= agent.pos[0]
+                a_y= agent.pos[1]
+                self.map[a_x, a_y]= -1 * agent.index
                 self.validMap[a_x, a_y] = -1
-                a_index -= 1
 
         # targets are marked with positive numbers from 1...m
         # in valid map: target (1)
         if len(self.targetList) != 0:
-            target_pos = self.targetList.reshape(-1, 2)
-            t_index = 1
-            for t_p in target_pos:
-                t_x = t_p[0]
-                t_y = t_p[1]
-                self.map[t_x, t_y] = t_index
+            for target in self.targetList:
+                t_x = target.pos[0]
+                t_y = target.pos[1]
+                self.map[t_x, t_y] = target.time
                 self.validMap[t_x, t_y] = 1
-                t_index += 1
+
+
+    def decay_time(self):
+        for i in range(len(self.targetList)):
+            self.targetList[i].decay()
+
 
 
 
@@ -126,8 +140,7 @@ class Env:
 
 
     def view_agents_pos(self):
-        pos= np.array(self.agentList)
-        pos= pos.reshape(-1,2)
+        pos= [i.pos for i in self.agentList]
         return pos
 
     def view_targets_pos(self):
@@ -169,11 +182,10 @@ class Env:
         for p, t in zip(poslist, movList):
             new_p = p + t
             if self.is_valid_location(new_p, self.validMap, 1):
-                self.agentList[index] = new_p[0]
-                self.agentList[index + 1] = new_p[1]
+                self.agentList[index].pos= new_p
                 # after movement, clear past pos
                 self.clear_pos(p)
-            index += 2
+            index += 1
 
         poslist = env.view_agents_pos()
         indices = np.array([]).astype(int)
@@ -184,8 +196,9 @@ class Env:
             y= p[1]
             # if new pos is on a target in the map
             if self.map[x, y] > 0:
-                indices= np.append(indices, [x, y])
-                self.clear_targets(self.map[x, y])
+                t_index= self.index_target([x,y])
+                indices= np.append(indices, t_index)
+                self.clear_targets(t_index)
 
         #remove targets in the target list, can be simultaneous
         self.targetList = np.delete(self.targetList, indices)
@@ -196,11 +209,35 @@ class Env:
         self.update_map()
 
 
+        #decay time for targets and remove target with no time
+        self.decay_time()
+        self.clean_target_time()
+
+    def clean_target_time(self):
+        indices = np.array([]).astype(int)
+
+        for i in range(len(self.targetList)):
+            if self.targetList[i].time <= 0:
+                indices= np.append(indices, i)
+                self.clear_targets(i)
+        self.targetList = np.delete(self.targetList, indices)
+
+
+
+    def index_target(self, pos):
+        for i in len(self.targetList):
+            if self.targetList[i] == pos:
+                return i
+        return None
+
+
+
+
     #clear target object on map:
     def clear_targets(self, index):
-        pos= int (2 * (index - 1))
 
-        self.clear_pos([self.targetList[pos], self.targetList[pos + 1]])
+        target_pos = self.targetList[index].pos
+        self.clear_pos([target_pos[0], target_pos[1]])
 
 
 
@@ -249,7 +286,8 @@ class Env:
     def step(self, action_list):
         env.step_agents(action_list)
         #can add a pattern to generate targets here!
-    
+
+
 
 
     def reset(self):
@@ -377,12 +415,29 @@ if __name__ == '__main__':
     env= Env()
     env.init_env()
 
+    # print(env.view_agents_pos())
+    #
+    # actionList = [0, 1]
+    # env.step(actionList)
+    #
+    # print(env.view_agents_pos())
+    #
+    # actionList = [3, 3]
+    #
+    # env.step(actionList)
+    #
+    #
+    # print(env.view_agents_pos())
+
+
+
     # manually spawn agents and targets
     # env.agentList= np.array([0,0, 2,2])
     # env.targetList = np.array([0, 1, 2, 3])
-    env.update_map()
-    print(env.map)
-    print(env.validMap)
+    # env.update_map()
+    # print(env.map)
+    # print(env.validMap)
+
 
     # env.step_agents([4,4])
     # env.step_agents([1, 1])
@@ -398,7 +453,7 @@ if __name__ == '__main__':
     # print(env.map)
     # print(env.validMap)
 
-    env.render()
+    # env.render()
 
 
 
