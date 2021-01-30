@@ -204,14 +204,14 @@ class Env:
         self.targetList = np.delete(self.targetList, indices)
 
 
-        #update map at last
-
-        self.update_map()
-
 
         #decay time for targets and remove target with no time
         self.decay_time()
         self.clean_target_time()
+
+        # update map at last
+
+        self.update_map()
 
     def clean_target_time(self):
         indices = np.array([]).astype(int)
@@ -225,7 +225,7 @@ class Env:
 
 
     def index_target(self, pos):
-        for i in len(self.targetList):
+        for i in range(len(self.targetList)):
             if self.targetList[i] == pos:
                 return i
         return None
@@ -414,6 +414,15 @@ class Env:
 if __name__ == '__main__':
     env= Env()
     env.init_env()
+
+    print(env.map)
+    actionList = [0, 1]
+    env.step(actionList)
+    env.step(actionList)
+    env.step(actionList)
+    print(env.validMap)
+    print(env.map)
+
 
     # print(env.view_agents_pos())
     #
