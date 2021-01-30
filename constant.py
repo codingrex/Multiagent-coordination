@@ -6,3 +6,4 @@ class CONSTANTS:
         self.HEIGHT= 5
         self.WIDTH= 5
         self.START_TIME= 2
+        self.NUMBER_AGENTS= 2

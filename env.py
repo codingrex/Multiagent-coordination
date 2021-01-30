@@ -28,6 +28,7 @@ class Env:
         self.width = self.map.shape[1]
         self.agentList= []
         self.targetList = []
+        self.numAgents= CONST.NUMBER_AGENTS
 
 
 
@@ -43,7 +44,7 @@ class Env:
 
 
     
-    def init_env(self, num_agents = 2):
+    def init_env(self, num_agents = CONST.NUMBER_AGENTS):
         self.validMap= np.zeros_like(self.map)
         self.height= self.map.shape[0]
         self.width = self.map.shape[1]
@@ -56,7 +57,7 @@ class Env:
 
 
 
-    def rand_agents_pos(self, num_agents = 2):
+    def rand_agents_pos(self, num_agents = CONST.NUMBER_AGENTS):
 
         pos= self.random_pos(num_agents)
 
@@ -416,12 +417,17 @@ if __name__ == '__main__':
     env.init_env()
 
     print(env.map)
+    print(env.validMap)
+    env.render()
     actionList = [0, 1]
     env.step(actionList)
-    env.step(actionList)
+    print(env.validMap)
     env.step(actionList)
     print(env.validMap)
-    print(env.map)
+    env.step(actionList)
+    print(env.validMap)
+
+    env.render()
 
 
     # print(env.view_agents_pos())
