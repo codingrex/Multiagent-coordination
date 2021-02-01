@@ -6,7 +6,7 @@ import cv2
 import time
 import skimage.measure
 import math
-
+import keyboard
 
 
 from obstacle import MapGenerator
@@ -83,6 +83,17 @@ class Env:
             self.targetList = np.append(self.targetList, target)
 
         self.update_map()
+        
+    def spawn_epsilon_target(self):
+        num_targets = 0
+        if len(self.targetList) < CONST.MAX_TARGETS:
+            if np.random.rand() < CONST.EPSILON_TARGET:
+                num_targets = 1
+                while np.random.rand() < CONST.EPSILON_TARGET:
+                    num_targets += 1
+            
+            self.rand_target_pos(num_targets)
+                
 
     def update_map(self):
 
@@ -209,7 +220,7 @@ class Env:
         #decay time for targets and remove target with no time
         self.decay_time()
         self.clean_target_time()
-
+        self.spawn_epsilon_target()
         # update map at last
 
         self.update_map()
@@ -227,7 +238,7 @@ class Env:
 
     def index_target(self, pos):
         for i in range(len(self.targetList)):
-            if self.targetList[i] == pos:
+            if self.targetList[i].pos == pos:
                 return i
         return None
 
@@ -411,23 +422,32 @@ class Env:
 #         full_heatmap = cv2.putText(full_heatmap, display_string, (20,20), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (255,255,255) , 2, cv2.LINE_AA)
 #         self.out.write(full_heatmap.astype('uint8'))
 
+def getKeyPress():
+    act = 0
+    key_press = keyboard.read_key()
+    if key_press == "up":
+        act = 4
+    elif key_press == "left":
+        act = 2
+    elif key_press == "down":
+        act = 3
+    elif key_press == "right":
+        act = 1
+    else:
+        act = 0
+    return act
 
 if __name__ == '__main__':
     env= Env()
     env.init_env()
 
-    print(env.map)
-    print(env.validMap)
+    # print(env.map)
+    # print(env.validMap)
     env.render()
-    actionList = [0, 1]
-    env.step(actionList)
-    print(env.validMap)
-    env.step(actionList)
-    print(env.validMap)
-    env.step(actionList)
-    print(env.validMap)
-
-    env.render()
+    for episode in range(CONST.LEN_EPISODE):
+        actionList = [getKeyPress(), 0]
+        env.step(actionList)
+        env.render()
 
 
     # print(env.view_agents_pos())
