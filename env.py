@@ -52,8 +52,8 @@ class Env:
         self.targetList= np.array([]).astype(int)
         self.map= mapGen.generate_map(CONST.HEIGHT, CONST.WIDTH)
         self.validMap = np.zeros_like(self.map)
-        self.rand_target_pos()
-        self.rand_agents_pos()
+        self.rand_target_pos(CONST.INIT_NUM_TARGETS)
+        self.rand_agents_pos(CONST.NUMBER_AGENTS)
 
 
 
