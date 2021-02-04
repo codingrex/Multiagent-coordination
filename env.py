@@ -186,10 +186,10 @@ class Env:
 
 
     def step_agents(self, actionList):
-        movList =np.array([env.interprete_action(i) for i in actionList])
+        movList =np.array([self.interprete_action(i) for i in actionList])
         index= 0
 
-        poslist = env.view_agents_pos()
+        poslist = self.view_agents_pos()
 
         for p, t in zip(poslist, movList):
             new_p = p + t
@@ -199,7 +199,7 @@ class Env:
                 self.clear_pos(p)
             index += 1
 
-        poslist = env.view_agents_pos()
+        poslist = self.view_agents_pos()
         indices = np.array([]).astype(int)
 
         # if agent gets the target
@@ -296,15 +296,18 @@ class Env:
 
 
     def step(self, action_list):
-        env.step_agents(action_list)
+        self.step_agents(action_list)
         #can add a pattern to generate targets here!
-
+        
+        return self.agentList, self.targetList
 
 
 
     def reset(self):
         
         self.init_env()
+        
+        return self.agentList, self.targetList
     
     def render_prep(self, map):
         mapshow = np.rot90(map, 1)
@@ -334,7 +337,7 @@ class Env:
         cv2.imshow("Map", full_map)
 
 
-        cv2.waitKey()
+        cv2.waitKey(1)
 #
 #     def get_reward(self, current_map):
 #
