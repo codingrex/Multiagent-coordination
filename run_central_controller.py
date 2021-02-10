@@ -66,10 +66,16 @@ if __name__ == '__main__':
         a1_map = np.where(current_map == -1, 1, 0)
         a2_map = np.where(current_map == -2, 1, 0)
         target_map = np.where(current_map > 0, env.map, 0)
-        a1_action = np.zeros(5)
-        a1_action[action_list[0]] = 1
-        a2_action = np.zeros(5)
-        a2_action[action_list[1]] = 1
+        
+#        # 1 hot encode the actions
+#        a1_action = np.zeros(5)
+#        a1_action[action_list[0]] = 1
+#        a2_action = np.zeros(5)
+#        a2_action[action_list[1]] = 1
+        
+        # use action as value
+        a1_action = action_list[0]
+        a2_action = action_list[1]
         
         # agent 1
         learn_map = np.array([a1_map, a2_map, target_map])

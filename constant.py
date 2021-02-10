@@ -3,7 +3,7 @@ import numpy as np
 
 class CONSTANTS:
     def __init__(self):
-        self.LEN_EPISODE = 100
+        self.LEN_EPISODE = 1000
         self.HEIGHT= 10
         self.WIDTH= 10
         self.START_TIME= 10

@@ -27,7 +27,8 @@ class Cent_controller:
         
         target_taken_set = set([])
         target_for_agent = []
-        for time_list in agent2target_list:
+
+        for agent_idx, time_list in enumerate(agent2target_list):
             order = np.argsort(time_list)[::-1]
             
             for idx in order:
@@ -38,6 +39,9 @@ class Cent_controller:
                     target_for_agent.append(idx)
                     target_taken_set.add(idx)
                     break
+            
+            if not len(target_for_agent) == agent_idx + 1:
+                target_for_agent.append(-1)
         
         action_list = []
         for agent_idx, target_idx in enumerate(target_for_agent):

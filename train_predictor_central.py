@@ -21,9 +21,9 @@ net = SupvNet()
 
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+optimizer = optim.SGD(net.parameters(), lr= 0.5, momentum=0.9)
 
-for epoch in range(2):  # loop over the dataset multiple times
+for epoch in range(400):  # loop over the dataset multiple times
 
     memory_states, memory_actions = torch.from_numpy(np.array(memory[0]),), torch.from_numpy(np.array(memory[1]))
 
@@ -31,7 +31,7 @@ for epoch in range(2):  # loop over the dataset multiple times
 
     running_loss = 0.0
     # get the inputs; data is a list of [inputs, labels]
-    inputs, labels = memory_states, memory_actions
+    inputs, labels = memory_states, memory_actions.long()
 
 
     # zero the parameter gradients
@@ -45,7 +45,7 @@ for epoch in range(2):  # loop over the dataset multiple times
 
     # print statistics
     running_loss += loss.item()
-    print('[%d, %5d] loss: %.3f' %
+    print('[%d] loss: %.3f' %
           (epoch + 1, running_loss))
     running_loss = 0.0
 
