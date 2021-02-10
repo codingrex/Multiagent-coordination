@@ -25,18 +25,20 @@ optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 for epoch in range(2):  # loop over the dataset multiple times
 
-    memory_states, memory_actions = torch.from_numpy(np.array(memory[0])), torch.from_numpy(np.array(memory[1]))
-    
-    memory_states, memory_actions = memory_states.double(), memory_actions.double()
+    memory_states, memory_actions = torch.from_numpy(np.array(memory[0]),), torch.from_numpy(np.array(memory[1]))
+
+
+
     running_loss = 0.0
     # get the inputs; data is a list of [inputs, labels]
     inputs, labels = memory_states, memory_actions
+
 
     # zero the parameter gradients
     optimizer.zero_grad()
 
     # forward + backward + optimize
-    outputs = net(inputs)
+    outputs = net(inputs.float())
     loss = criterion(outputs, labels)
     loss.backward()
     optimizer.step()
