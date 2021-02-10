@@ -25,10 +25,10 @@ class SupvNet(nn.Module):
         return x
 
 
-net = SupvNet()
-
-summary(net, (3, 10, 10))
-
-
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+#net = SupvNet()
+#
+#summary(net, (3, 10, 10))
+#
+#
+#criterion = nn.CrossEntropyLoss()
+#optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)

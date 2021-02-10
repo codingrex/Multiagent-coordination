@@ -11,4 +11,4 @@ class CONSTANTS:
         self.EPSILON_TARGET = 0.2
         self.MAX_TARGETS = int(self.HEIGHT * self.WIDTH / 0.3)
         
-        self.INIT_NUM_TARGETS = 4
+        self.INIT_NUM_TARGETS = 5

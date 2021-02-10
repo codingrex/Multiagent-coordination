@@ -13,7 +13,6 @@ import skimage.measure
 import math
 import keyboard
 import pickle
-from collections import defaultdict
 
 
 from obstacle import MapGenerator
@@ -42,7 +41,8 @@ def getKeyPress():
 
 if __name__ == '__main__':
     
-    memory = defaultdict(list)
+    memory_state = []
+    memory_action = []
     
     env= Env()
     controller = Cent_controller()
@@ -51,20 +51,41 @@ if __name__ == '__main__':
     # print(env.validMap)
     env.render()
     for episode in range(CONST.LEN_EPISODE):
+        current_map = np.copy(env.map)
+
         action_list = controller.get_action(agent_list, target_list)
 #        action_list = [getKeyPress(), 0]
 #        print(action_list)
+        
+        
         agent_list, target_list = env.step(action_list)
         env.render()
         cv2.waitKey(20)
         
-        ep_memory = []
-#        ep_memory.append(env.map)
-        ep_memory.append(env.agentList)
-        ep_memory.append(env.targetList)
-        ep_memory.append(action_list)
         
-        memory[episode] = ep_memory
+        a1_map = np.where(current_map == -1, 1, 0)
+        a2_map = np.where(current_map == -2, 1, 0)
+        target_map = np.where(current_map > 0, env.map, 0)
+        a1_action = np.zeros(5)
+        a1_action[action_list[0]] = 1
+        a2_action = np.zeros(5)
+        a2_action[action_list[1]] = 1
+        
+        # agent 1
+        learn_map = np.array([a1_map, a2_map, target_map])
+        memory_state.append(learn_map)
+        memory_action.append(a2_action)
+        
+        # agent 2
+        learn_map = np.array([a2_map, a1_map, target_map])
+        memory_state.append(learn_map)
+        memory_action.append(a1_action)
     
     # save memory
-    pickle.dump( memory, open( "memory_100.p", "wb" ) )
+    pickle.dump( [memory_state, memory_action], open( "memory_100.p", "wb" ) )
+    
+    
+    
+    
+    
+    
