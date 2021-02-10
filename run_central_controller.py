@@ -12,6 +12,8 @@ import time
 import skimage.measure
 import math
 import keyboard
+import pickle
+from collections import defaultdict
 
 
 from obstacle import MapGenerator
@@ -39,6 +41,9 @@ def getKeyPress():
     return act
 
 if __name__ == '__main__':
+    
+    memory = defaultdict(list)
+    
     env= Env()
     controller = Cent_controller()
     agent_list, target_list = env.reset()
@@ -52,3 +57,14 @@ if __name__ == '__main__':
         agent_list, target_list = env.step(action_list)
         env.render()
         cv2.waitKey(20)
+        
+        ep_memory = []
+#        ep_memory.append(env.map)
+        ep_memory.append(env.agentList)
+        ep_memory.append(env.targetList)
+        ep_memory.append(action_list)
+        
+        memory[episode] = ep_memory
+    
+    # save memory
+    pickle.dump( memory, open( "memory_100.p", "wb" ) )
