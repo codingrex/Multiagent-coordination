@@ -24,7 +24,14 @@ class SupvNet(nn.Module):
         x = F.relu(self.fc2(x))
         return x
 
-
+    def save_model(self, filename):
+        torch.save(self.state_dict(), filename)
+        
+    def load_model(self, filename):
+        self.load_state_dict(torch.load(filename))
+        self.eval()
+    
+    
 #net = SupvNet()
 #
 #summary(net, (3, 10, 10))

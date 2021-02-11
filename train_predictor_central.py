@@ -12,7 +12,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch
 
-memory = pickle.load( open( "memory_100.p", "rb" ) )
+memory = pickle.load( open( "memory_10000.p", "rb" ) )
 
 
 net = SupvNet()
@@ -21,9 +21,9 @@ net = SupvNet()
 
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr= 0.5, momentum=0.9)
+optimizer = optim.SGD(net.parameters(), lr= 0.01, momentum=0.9)
 
-for epoch in range(400):  # loop over the dataset multiple times
+for epoch in range(1000):  # loop over the dataset multiple times
 
     memory_states, memory_actions = torch.from_numpy(np.array(memory[0]),), torch.from_numpy(np.array(memory[1]))
 
@@ -48,5 +48,11 @@ for epoch in range(400):  # loop over the dataset multiple times
     print('[%d] loss: %.3f' %
           (epoch + 1, running_loss))
     running_loss = 0.0
-
+    
+    if epoch % 100 == 1:
+        net.save_model("predictor_10000.model")
+        
+    
+    
 print('Finished Training')
+net.save_model("predictor_10000.model")

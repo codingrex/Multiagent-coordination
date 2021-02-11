@@ -60,7 +60,7 @@ if __name__ == '__main__':
         
         agent_list, target_list = env.step(action_list)
         env.render()
-        cv2.waitKey(20)
+        cv2.waitKey(1)
         
         
         a1_map = np.where(current_map == -1, 1, 0)
@@ -88,7 +88,7 @@ if __name__ == '__main__':
         memory_action.append(a1_action)
     
     # save memory
-    pickle.dump( [memory_state, memory_action], open( "memory_100.p", "wb" ) )
+    pickle.dump( [memory_state, memory_action], open( "memory_10000.p", "wb" ) )
     
     
     
