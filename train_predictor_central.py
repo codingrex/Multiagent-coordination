@@ -16,12 +16,13 @@ memory = pickle.load( open( "memory_10000.p", "rb" ) )
 
 
 net = SupvNet()
+net.load_model("predictor_10000.model")
 
 #summary(net, (3, 10, 10))
 
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr= 0.01, momentum=0.9)
+optimizer = optim.SGD(net.parameters(), lr= 0.05, momentum=0.9)
 
 for epoch in range(1000):  # loop over the dataset multiple times
 

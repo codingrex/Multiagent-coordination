@@ -23,13 +23,10 @@ memory = pickle.load( open( "memory_test.p", "rb" ) )
 
 
 net = SupvNet()
-net.load_model("predictor_1000.model")
+net.load_model("predictor_10000.model")
 
 #summary(net, (3, 10, 10))
 
-
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr= 1.0, momentum=0.9)
 
 
 memory_states, memory_actions = torch.from_numpy(np.array(memory[0]),), torch.from_numpy(np.array(memory[1]))
@@ -46,7 +43,6 @@ inputs, labels = memory_states, memory_actions.long()
 
 # forward + backward + optimize
 outputs = net(inputs.float())
-loss = criterion(outputs, labels)
 #    loss.backward()
 #    optimizer.step()
 
