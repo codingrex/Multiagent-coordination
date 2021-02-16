@@ -35,7 +35,7 @@ class Cent_controller:
         if len(target_list) >= 2:
             _, target_for_agent = lsa(cost)
         elif 0 < len(target_list) < len(agent_pos_list):
-            cost = np.hstack((cost, 100 * np.ones((len(agent_pos_list),1))))
+            cost = np.hstack((cost, 1000 * np.ones((len(agent_pos_list),1))))
             _, target_for_agent = lsa(cost)
         else:
             target_for_agent = [-1]*len(agent_pos_list)

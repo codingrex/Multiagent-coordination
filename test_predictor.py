@@ -45,7 +45,7 @@ def getKeyPress():
 if __name__ == '__main__':
     
     predictor = SupvNet()
-    predictor.load_model("predictor_1000.model")
+    predictor.load_model("predictor_10000.model")
     
     memory_state = []
     num_correct_predictions = 0    

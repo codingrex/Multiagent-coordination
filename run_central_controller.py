@@ -51,6 +51,7 @@ if __name__ == '__main__':
     # print(env.validMap)
     env.render()
     for episode in range(CONST.LEN_EPISODE):
+        print(episode)
         current_map = np.copy(env.map)
 
         action_list = controller.get_action(agent_list, target_list)
@@ -59,8 +60,8 @@ if __name__ == '__main__':
         
         
         agent_list, target_list = env.step(action_list)
-        env.render()
-        cv2.waitKey(100)
+#        env.render()
+#        cv2.waitKey(1)
         
         
         a1_map = np.where(current_map == -1, 1, 0)
@@ -83,12 +84,13 @@ if __name__ == '__main__':
         memory_action.append(a2_action)
         
         # agent 2
-#        learn_map = np.array([a2_map, a1_map, target_map])
-#        memory_state.append(learn_map)
-#        memory_action.append(a1_action)
+        learn_map = np.array([a2_map, a1_map, target_map])
+        memory_state.append(learn_map)
+        memory_action.append(a1_action)
     
     # save memory
-    pickle.dump( [memory_state, memory_action], open( "memory_test.p", "wb" ) )
+    print(len(memory_state))
+#    pickle.dump( [memory_state, memory_action], open( "memory_test.p", "wb" ) )
     
     
     

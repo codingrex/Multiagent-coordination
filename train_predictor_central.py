@@ -13,7 +13,7 @@ import torch.optim as optim
 import torch
 import matplotlib.pyplot as plt
 
-memory = pickle.load( open( "memory_a1_10000.p", "rb" ) )
+memory = pickle.load( open( "memory_10000.p", "rb" ) )
 test_memory = pickle.load( open( "memory_test.p", "rb" ) )
 
 
@@ -23,7 +23,8 @@ net = SupvNet()
 #summary(net, (3, 10, 10))
 
 loss_arr = []
-accuracy_arr = []
+accuracy_x = []
+accuracy_y = []
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr= 0.1, momentum=0.9)
@@ -50,39 +51,41 @@ for epoch in range(1500):  # loop over the dataset multiple times
 
     # print statistics
     running_loss += loss.item()
-    print('[%d] loss: %.3f' %
-          (epoch + 1, running_loss))
     
     loss_arr.append(running_loss)
-    running_loss = 0.0
     
-    test_states, test_actions = torch.from_numpy(np.array(test_memory[0]),), torch.from_numpy(np.array(test_memory[1]))
+    if epoch % 50 == 0:
+        test_states, test_actions = torch.from_numpy(np.array(test_memory[0]),), torch.from_numpy(np.array(test_memory[1]))
+        
+        # get the inputs; data is a list of [inputs, labels]
+        inputs, labels = test_states, test_actions.long()
+        
+        
+        # zero the parameter gradients
+        #    optimizer.zero_grad()
+        
+        # forward + backward + optimize
+        outputs = net(inputs.float())
+        #    loss.backward()
+        #    optimizer.step()
+        
+        pred_actions = outputs.argmax(axis = 1)
+        
+        accuracy = pred_actions == labels
+        accuracy = accuracy.numpy()
+        
+        accuracy = np.sum(accuracy)/ len(accuracy)
+        accuracy_x.append(accuracy)
+        accuracy_y.append(
+                )
     
-    # get the inputs; data is a list of [inputs, labels]
-    inputs, labels = test_states, test_actions.long()
-    
-    
-    # zero the parameter gradients
-    #    optimizer.zero_grad()
-    
-    # forward + backward + optimize
-    outputs = net(inputs.float())
-    #    loss.backward()
-    #    optimizer.step()
-    
-    pred_actions = outputs.argmax(axis = 1)
-    
-    accuracy = pred_actions == labels
-    accuracy = accuracy.numpy()
-    
-    accuracy = np.sum(accuracy)/ len(accuracy)
-    accuracy_arr.append(accuracy)
-    
+    print('[%d] loss: %.3f, accuracy: %.3f' %
+          (epoch + 1, running_loss, accuracy_x[-1]))
     if epoch % 100 == 10:
         net.save_model("predictor_10000.model")
         plt.close()
-        plt.plot(loss_arr)
-        plt.plot(accuracy_arr)
+        plt.plot(np.array(loss_arr)/ max(loss_arr))
+        plt.plot(accuracy_y, accuracy_x)
         plt.show()
         plt.pause(0.1)
         
