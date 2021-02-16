@@ -19,7 +19,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torch
 
-memory = pickle.load( open( "memory_test.p", "rb" ) )
 
 
 net = SupvNet()
@@ -29,13 +28,11 @@ net.load_model("predictor_10000.model")
 
 
 
-memory_states, memory_actions = torch.from_numpy(np.array(memory[0]),), torch.from_numpy(np.array(memory[1]))
+test_memory = pickle.load( open( "memory_test.p", "rb" ) )
+test_states, test_actions = torch.from_numpy(np.array(test_memory[0]),), torch.from_numpy(np.array(test_memory[1]))
 
-
-
-running_loss = 0.0
 # get the inputs; data is a list of [inputs, labels]
-inputs, labels = memory_states, memory_actions.long()
+inputs, labels = test_states, test_actions.long()
 
 
 # zero the parameter gradients
@@ -54,6 +51,5 @@ accuracy = accuracy.numpy()
 accuracy = np.sum(accuracy)/ len(accuracy)
 
 print(accuracy)
-
 
 

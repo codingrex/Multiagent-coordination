@@ -20,7 +20,7 @@ from constant import  CONSTANTS
 from agent import Agent
 from target import  Target
 from env import Env
-from centralized_controller import Cent_controller
+from linear_sum_assignment_controller import Cent_controller
 
 CONST= CONSTANTS()
 
@@ -60,7 +60,7 @@ if __name__ == '__main__':
         
         agent_list, target_list = env.step(action_list)
         env.render()
-        cv2.waitKey(1)
+        cv2.waitKey(100)
         
         
         a1_map = np.where(current_map == -1, 1, 0)
@@ -83,12 +83,12 @@ if __name__ == '__main__':
         memory_action.append(a2_action)
         
         # agent 2
-        learn_map = np.array([a2_map, a1_map, target_map])
-        memory_state.append(learn_map)
-        memory_action.append(a1_action)
+#        learn_map = np.array([a2_map, a1_map, target_map])
+#        memory_state.append(learn_map)
+#        memory_action.append(a1_action)
     
     # save memory
-    pickle.dump( [memory_state, memory_action], open( "memory_10000.p", "wb" ) )
+    pickle.dump( [memory_state, memory_action], open( "memory_test.p", "wb" ) )
     
     
     
