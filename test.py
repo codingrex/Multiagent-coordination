@@ -49,5 +49,5 @@ outputs = net(inputs.float())
 
 pred_actions = outputs.argmax(axis = 1)
 
-
-print(confusion_matrix(labels.numpy(), pred_actions.numpy()))
+conf_matrix = confusion_matrix(labels.numpy(), pred_actions.numpy())
+print(conf_matrix)

@@ -5,12 +5,6 @@ Created on Wed Feb 10 20:21:30 2021
 @author: amris
 """
 
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb  9 19:53:44 2021
-
-@author: amris
-"""
 
 import pickle
 import numpy as np
