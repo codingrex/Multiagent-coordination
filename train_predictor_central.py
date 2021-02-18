@@ -12,10 +12,12 @@ import torch.nn as nn
 import torch.optim as optim
 import torch
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
-memory = pickle.load( open( "memory_10000.p", "rb" ) )
-test_memory = pickle.load( open( "memory_test.p", "rb" ) )
+memory = pickle.load( open( "memory_old_controller.p", "rb" ) )
+test_memory = pickle.load( open( "test_old_controller.p", "rb" ) )
 
+model_filename = 'old_cntrlr_trained.model'
 
 net = SupvNet()
 #net.load_model("predictor_10000.model")
@@ -29,7 +31,7 @@ accuracy_y = []
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr= 0.1, momentum=0.9)
 
-for epoch in range(1500):  # loop over the dataset multiple times
+for epoch in tqdm(range(1500)):  # loop over the dataset multiple times
 
     memory_states, memory_actions = torch.from_numpy(np.array(memory[0]),), torch.from_numpy(np.array(memory[1]))
 
@@ -76,13 +78,12 @@ for epoch in range(1500):  # loop over the dataset multiple times
         
         accuracy = np.sum(accuracy)/ len(accuracy)
         accuracy_x.append(accuracy)
-        accuracy_y.append(
-                )
+        accuracy_y.append(epoch)
     
     print('[%d] loss: %.3f, accuracy: %.3f' %
           (epoch + 1, running_loss, accuracy_x[-1]))
     if epoch % 100 == 10:
-        net.save_model("predictor_10000.model")
+        net.save_model(model_filename)
         plt.close()
         plt.plot(np.array(loss_arr)/ max(loss_arr))
         plt.plot(accuracy_y, accuracy_x)
@@ -92,4 +93,4 @@ for epoch in range(1500):  # loop over the dataset multiple times
     
     
 print('Finished Training')
-net.save_model("predictor_10000.model")
+net.save_model(model_filename)

@@ -13,14 +13,15 @@ import skimage.measure
 import math
 import keyboard
 import pickle
-
+from tqdm import tqdm
 
 from obstacle import MapGenerator
 from constant import  CONSTANTS
 from agent import Agent
 from target import  Target
 from env import Env
-from linear_sum_assignment_controller import Cent_controller
+#from linear_sum_assignment_controller import Cent_controller
+from centralized_controller import Cent_controller
 
 CONST= CONSTANTS()
 
@@ -50,8 +51,7 @@ if __name__ == '__main__':
     # print(env.map)
     # print(env.validMap)
     env.render()
-    for episode in range(CONST.LEN_EPISODE):
-        print(episode)
+    for episode in tqdm(range(CONST.LEN_EPISODE)):
         current_map = np.copy(env.map)
 
         action_list = controller.get_action(agent_list, target_list)
@@ -89,8 +89,7 @@ if __name__ == '__main__':
         memory_action.append(a1_action)
     
     # save memory
-    print(len(memory_state))
-#    pickle.dump( [memory_state, memory_action], open( "memory_test.p", "wb" ) )
+#    pickle.dump( [memory_state, memory_action], open( "test_old_controller.p", "wb" ) )
     
     
     

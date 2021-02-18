@@ -9,7 +9,7 @@ from statistics import mean
 from torch.utils.tensorboard import SummaryWriter
 import random
 
-    class SupvNet(nn.Module):
+class SupvNet(nn.Module):
     def __init__(self):
         super(SupvNet, self).__init__()
         self.conv1 = nn.Conv2d(3, 6, 3)
