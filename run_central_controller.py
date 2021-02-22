@@ -62,10 +62,9 @@ if __name__ == '__main__':
         agent_list, target_list = env.step(action_list)
 #        env.render()
 #        cv2.waitKey(1)
-        
-        
+
         a1_map = np.where(current_map == -1, 1, 0)
-        a2_map = np.where(current_map == -2, 1, 0)
+        a2_map = np.where(env.get_quadMap(0, 2, 2) == -2, 1, 0)
         target_map = np.where(current_map > 0, env.map, 0)
         
 #        # 1 hot encode the actions
@@ -84,9 +83,14 @@ if __name__ == '__main__':
         memory_action.append(a2_action)
         
         # agent 2
+        a1_map = np.where(env.get_quadMap(1, 2, 2) == -2, 1, 0)
+        a2_map = np.where(current_map == -2, 1, 0)
+        target_map = np.where(current_map > 0, env.map, 0)
+
         learn_map = np.array([a2_map, a1_map, target_map])
         memory_state.append(learn_map)
         memory_action.append(a1_action)
+
     
     # save memory
 #    pickle.dump( [memory_state, memory_action], open( "test_old_controller.p", "wb" ) )
