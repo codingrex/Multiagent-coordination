@@ -338,6 +338,61 @@ class Env:
 
 
         cv2.waitKey(1)
+
+
+
+
+    def get_quad(self, pos, cell_x_size= 4, cell_y_size= 4):
+        pos_x= (int) (pos[0] / cell_x_size)
+        pos_y = (int)(pos[1] / cell_y_size)
+
+        return pos_x, pos_y
+
+    def set_quad(self, quadMap, quad_pos,  value= -2, cell_x_size= 4, cell_y_size= 4):
+        a_x = quad_pos[0] * cell_x_size
+        a_y = quad_pos[1] * cell_y_size
+
+
+        quadMap[a_x:a_x + cell_x_size, a_y:a_y + cell_y_size] += value
+
+
+    def get_quadMap(self, agent, cell_x_size= 4, cell_y_size= 4):
+        num_x_cells = (int) (self.map.shape[0] / cell_x_size)
+        num_y_cells = (int) (self.map.shape[1] / cell_x_size)
+
+
+
+        quadMap= np.zeros_like(self.map)
+
+        quadvalid = np.zeros((num_x_cells, num_y_cells))
+
+        for i in range(len(self.agentList)):
+            a_x = self.agentList[i].pos[0]
+            a_y = self.agentList[i].pos[1]
+            quad_x, quad_y = self.get_quad([a_x, a_y], cell_x_size, cell_y_size)
+            if i == agent:
+                quadvalid[quad_x, quad_y] = 1
+                quadMap[a_x, a_y]= -1
+            else:
+                if quadvalid[quad_x, quad_y]:
+                    quadMap[a_x, a_y] = -2
+                else:
+                    quad_pos= self.get_quad(self.agentList[i].pos, cell_x_size, cell_y_size)
+                    self.set_quad(quadMap, quad_pos, -2, cell_x_size, cell_y_size)
+
+
+        if len(self.targetList) != 0:
+            for target in self.targetList:
+                t_x = target.pos[0]
+                t_y = target.pos[1]
+                quadMap[t_x, t_y] = target.time
+
+        return quadMap
+
+
+
+
+
 #
 #     def get_reward(self, current_map):
 #
@@ -444,13 +499,24 @@ if __name__ == '__main__':
     env= Env()
     env.init_env()
 
-    # print(env.map)
+
+    #test maps
+    print(env.map)
     # print(env.validMap)
-    env.render()
-    for episode in range(CONST.LEN_EPISODE):
-        actionList = [getKeyPress(), 0]
-        env.step(actionList)
-        env.render()
+    print(env.get_quadMap(0, 2, 2))
+
+
+
+
+
+
+    #
+    # # Render
+    # env.render()
+    # for episode in range(CONST.LEN_EPISODE):
+    #     actionList = [getKeyPress(), 0]
+    #     env.step(actionList)
+    #     env.render()
 
 
     # print(env.view_agents_pos())

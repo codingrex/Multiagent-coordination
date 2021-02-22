@@ -11,8 +11,8 @@ import torch.optim as optim
 import torch
 import matplotlib.pyplot as plt
 
-#model = "old_cntrlr_trained.model"
-#test_memory_filename = "test_old_controller.p"
+# model = "old_cntrlr_trained.model"
+# test_memory_filename = "test_old_controller.p"
 
 
 model = "predictor_10000.model"
