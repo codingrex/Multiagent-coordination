@@ -14,10 +14,10 @@ import torch
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-memory = pickle.load( open( "memory_old_controller.p", "rb" ) )
-test_memory = pickle.load( open( "test_old_controller.p", "rb" ) )
+memory = pickle.load( open( "data/uncertain_train.p", "rb" ) )
+test_memory = pickle.load( open( "data/uncertain_test.p", "rb" ) )
 
-model_filename = 'old_cntrlr_trained.model'
+model_filename = 'model/hungarian_cntrlr_uncertain_trained.model'
 
 net = SupvNet()
 #net.load_model("predictor_10000.model")
@@ -83,7 +83,10 @@ for epoch in tqdm(range(1500)):  # loop over the dataset multiple times
     print('[%d] loss: %.3f, accuracy: %.3f' %
           (epoch + 1, running_loss, accuracy_x[-1]))
     if epoch % 100 == 10:
-        net.save_model(model_filename)
+        if len(accuracy_x)<=1:
+            net.save_model(model_filename)
+        elif accuracy_x[-1] > accuracy_x[-2]:
+            net.save_model(model_filename)
         plt.close()
         plt.plot(np.array(loss_arr)/ max(loss_arr))
         plt.plot(accuracy_y, accuracy_x)

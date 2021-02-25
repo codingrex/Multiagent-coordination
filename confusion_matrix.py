@@ -15,8 +15,8 @@ import matplotlib.pyplot as plt
 # test_memory_filename = "test_old_controller.p"
 
 
-model = "predictor_10000.model"
-test_memory_filename = "memory_test.p"
+model = "model/hungarian_cntrlr_uncertain_trained.model"
+test_memory_filename = "data/uncertain_test.p"
 
 test_memory = pickle.load( open( test_memory_filename, "rb" ) )
 net = SupvNet()
