@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-training_memory = pickle.load(open( "data/uncertain_train.p", "rb" ))
+training_memory = pickle.load(open( "data/certain_train.p", "rb" ))
 
 def plot_3d_hist(fig_num, title, distribution):
     
@@ -63,8 +63,8 @@ def agent_target_distribution(states):
     plot_3d_hist(3, 'Agent 2 position distribution', agent2_distribution)
     plot_3d_hist(4, 'target position distribution', target_distribution)
     
-    print(np.sum(agent1_distribution))
-    print(np.sum(agent2_distribution))
+    print(agent1_distribution)
+    print(agent2_distribution)
     print(target_distribution)
     
 

@@ -66,7 +66,7 @@ if __name__ == '__main__':
         if CONST.UNCERTAINITY:
             a1_map = np.where(current_map == -1, 1, 0)
             a2_map = np.where(env.get_quadMap(0, 2, 2) == -2, 1, 0)
-            target_map = np.where(current_map > 0, env.map, 0)
+            target_map = np.where(current_map > 0, current_map, 0)
             
     #        # 1 hot encode the actions
     #        a1_action = np.zeros(5)
@@ -88,7 +88,7 @@ if __name__ == '__main__':
             # agent 2
             a1_map = np.where(env.get_quadMap(1, 2, 2) == -2, 1, 0)
             a2_map = np.where(current_map == -2, 1, 0)
-            target_map = np.where(current_map > 0, env.map, 0)
+            target_map = np.where(current_map > 0, current_map, 0)
     
             learn_map = np.array([a2_map, a1_map, target_map])
             memory_state.append(learn_map)
@@ -96,7 +96,7 @@ if __name__ == '__main__':
         else:
             a1_map = np.where(current_map == -1, 1, 0)
             a2_map = np.where(current_map == -2, 1, 0)
-            target_map = np.where(current_map > 0, env.map, 0)
+            target_map = np.where(current_map > 0, current_map, 0)
             
     #        # 1 hot encode the actions
     #        a1_action = np.zeros(5)
@@ -118,7 +118,7 @@ if __name__ == '__main__':
             # agent 2
             a1_map = np.where(current_map == -1, 1, 0)
             a2_map = np.where(current_map == -2, 1, 0)
-            target_map = np.where(current_map > 0, env.map, 0)
+            target_map = np.where(current_map > 0, current_map, 0)
     
             learn_map = np.array([a2_map, a1_map, target_map])
             memory_state.append(learn_map)
@@ -167,7 +167,7 @@ if __name__ == '__main__':
             del memory_state[index]
             del memory_num_targets[index]
     print("Data points = ", len(memory_state))
-#    pickle.dump( [memory_state, memory_action], open( "data/certain_train.p", "wb" ) )
+#    pickle.dump( [memory_state, memory_action], open( "data/certain_test.p", "wb" ) )
     
     
     

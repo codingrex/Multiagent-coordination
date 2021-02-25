@@ -3,7 +3,7 @@ import numpy as np
 
 class CONSTANTS:
     def __init__(self):
-        self.LEN_EPISODE = 14000
+        self.LEN_EPISODE = 800
         self.HEIGHT= 10
         self.WIDTH= 10
         self.START_TIME= 10
@@ -14,5 +14,5 @@ class CONSTANTS:
         self.INIT_NUM_TARGETS = 5
         
         # Training
-        self.NUM_DATA_POINTS = 20000
+        self.NUM_DATA_POINTS = 1000
         self.UNCERTAINITY = False

@@ -14,10 +14,10 @@ import torch
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-memory = pickle.load( open( "data/uncertain_train.p", "rb" ) )
-test_memory = pickle.load( open( "data/uncertain_test.p", "rb" ) )
+memory = pickle.load( open( "data/certain_train.p", "rb" ) )
+test_memory = pickle.load( open( "data/certain_test.p", "rb" ) )
 
-model_filename = 'model/hungarian_cntrlr_uncertain_trained.model'
+model_filename = 'model/hungarian_cntrlr_certain_trained.model'
 
 net = SupvNet()
 #net.load_model("predictor_10000.model")
@@ -29,7 +29,7 @@ accuracy_x = []
 accuracy_y = []
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr= 0.1, momentum=0.9)
+optimizer = optim.SGD(net.parameters(), lr= 0.01, momentum=0.9)
 
 for epoch in tqdm(range(1500)):  # loop over the dataset multiple times
 
